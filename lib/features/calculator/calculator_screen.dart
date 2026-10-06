@@ -14,6 +14,7 @@ import '../history/calculation_history_item.dart';
 import '../history/calculation_history_repository.dart';
 import '../history/calculation_history_screen.dart';
 import '../formula_library/formula_library_screen.dart';
+import '../graphing/graphing_screen.dart';
 import 'calculator_button.dart';
 import 'calculator_engine.dart';
 import 'calculator_state.dart';
@@ -518,6 +519,17 @@ class _CalculatorScreenState
         _state.lastAnswer = numericResult;
       }
     });
+  }
+
+  Future<void> _openGraphing() async {
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) =>
+            GraphingScreen(
+          initialDegrees: _state.isDegreeMode,
+        ),
+      ),
+    );
   }
 
   Future<void> _openFormulaLibrary() async {
@@ -1051,6 +1063,8 @@ class _CalculatorScreenState
                               _openHistory,
                           onFormulaLibraryTap:
                               _openFormulaLibrary,
+                          onGraphingTap:
+                              _openGraphing,
                         ),
                         const SizedBox(
                           height: 10,

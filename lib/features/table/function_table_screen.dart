@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_theme.dart';
+import '../graphing/graphing_screen.dart';
 import 'function_table_engine.dart';
 
 class FunctionTableScreen extends StatefulWidget {
-  const FunctionTableScreen({super.key});
+  const FunctionTableScreen({
+    super.key,
+    this.initialFunctionF,
+    this.initialFunctionG,
+    this.initialDegrees = true,
+  });
+
+  final String? initialFunctionF;
+  final String? initialFunctionG;
+  final bool initialDegrees;
 
   @override
   State<FunctionTableScreen> createState() =>
@@ -16,10 +26,8 @@ class _FunctionTableScreenState
   final FunctionTableEngine _engine =
       const FunctionTableEngine();
 
-  final TextEditingController _fController =
-      TextEditingController(text: 'x^2');
-  final TextEditingController _gController =
-      TextEditingController();
+  late final TextEditingController _fController;
+  late final TextEditingController _gController;
   final TextEditingController _startController =
       TextEditingController(text: '-5');
   final TextEditingController _endController =
@@ -27,9 +35,22 @@ class _FunctionTableScreenState
   final TextEditingController _stepController =
       TextEditingController(text: '1');
 
-  bool _degrees = true;
+  late bool _degrees;
   FunctionTableResult? _result;
   String? _validationMessage;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _fController = TextEditingController(
+      text: widget.initialFunctionF ?? 'x^2',
+    );
+    _gController = TextEditingController(
+      text: widget.initialFunctionG ?? '',
+    );
+    _degrees = widget.initialDegrees;
+  }
 
   @override
   void dispose() {
@@ -163,6 +184,34 @@ class _FunctionTableScreenState
     }
 
     return text;
+  }
+
+  Future<void> _openGraph() async {
+    final List<String> expressions =
+        <String>[
+      if (_fController.text.trim().isNotEmpty)
+        _fController.text.trim(),
+      if (_gController.text.trim().isNotEmpty)
+        _gController.text.trim(),
+    ];
+
+    if (expressions.isEmpty) {
+      setState(() {
+        _validationMessage =
+            'Enter f(x) or g(x) before opening the graph.';
+      });
+      return;
+    }
+
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) =>
+            GraphingScreen(
+          initialExpressions: expressions,
+          initialDegrees: _degrees,
+        ),
+      ),
+    );
   }
 
   @override
@@ -399,6 +448,11 @@ class _FunctionTableScreenState
             foregroundColor:
                 const Color(0xFF2B1A04),
           ),
+        ),
+        OutlinedButton.icon(
+          onPressed: _openGraph,
+          icon: const Icon(Icons.show_chart),
+          label: const Text('Graph'),
         ),
         OutlinedButton.icon(
           onPressed: _loadExample,
