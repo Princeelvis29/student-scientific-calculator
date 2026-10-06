@@ -2,7 +2,7 @@ enum CalculatorMode {
   comp('COMP', 'Scientific calculations', true),
   stat('STAT', 'Statistics', true),
   eqn('EQN', 'Equations & simultaneous equations', true),
-  matrix('MATRIX', 'Matrix calculations', false),
+  matrix('MATRIX', 'Matrix calculations', true),
   vector('VECTOR', 'Vector calculations', false),
   table('TABLE', 'Function tables', false),
   complex('CMPLX', 'Complex numbers', false);

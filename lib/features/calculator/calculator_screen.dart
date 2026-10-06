@@ -6,6 +6,7 @@ import '../../models/calculator_mode.dart';
 import '../../services/math_scanner_service.dart';
 import '../equation/equation_screen.dart';
 import '../statistics/statistics_screen.dart';
+import '../matrix/matrix_screen.dart';
 import 'calculator_button.dart';
 import 'calculator_engine.dart';
 import 'calculator_state.dart';
@@ -652,6 +653,16 @@ class _CalculatorScreenState
         MaterialPageRoute<void>(
           builder: (BuildContext context) =>
               const StatisticsModeScreen(),
+        ),
+      );
+      return;
+    }
+
+    if (selected == CalculatorMode.matrix) {
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (BuildContext context) =>
+              const MatrixModeScreen(),
         ),
       );
       return;
