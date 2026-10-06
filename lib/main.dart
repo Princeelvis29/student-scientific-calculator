@@ -17,7 +17,7 @@ class QubCalculatorClone extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
-        scaffoldBackgroundColor: const Color(0xFF1E1E1E), // Dark background
+        scaffoldBackgroundColor: const Color(0xFF1E1E1E), 
       ),
       home: const CalculatorScreen(),
     );
@@ -35,20 +35,19 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   String equation = "0";
   String result = "0";
 
-  // Expanded WAEC/JAMB layout including a Camera button
+  // Expanded layout with new scientific features and parentheses
   final List<String> buttons = [
     '📷', 'AC', 'C', '%',
     'sin', 'cos', 'tan', '/',
-    '7', '8', '9', 'x',
-    '4', '5', '6', '-',
-    '1', '2', '3', '+',
-    'log', '0', '.', '=',
+    'log', '√', '^', 'x',
+    '7', '8', '9', '-',
+    '4', '5', '6', '+',
+    '1', '2', '3', '(',
+    '0', '.', ')', '=',
   ];
 
-  // AI Camera Scanner Logic
   Future<void> scanMathProblem() async {
     final ImagePicker picker = ImagePicker();
-    // Launch the device camera
     final XFile? image = await picker.pickImage(source: ImageSource.camera);
 
     if (image != null) {
@@ -56,10 +55,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
 
       try {
-        // Process the image and extract text
         final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
-
-        // Clean the recognized text to fit our parser
         String scannedEquation = recognizedText.text
             .replaceAll('\n', '')
             .replaceAll(' ', '')
@@ -79,7 +75,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     }
   }
 
-  // Core Logic: Handles button presses and updates the screen
   void buttonPressed(String buttonText) {
     setState(() {
       if (buttonText == 'AC') {
@@ -91,38 +86,43 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           equation = "0";
         }
       } else if (buttonText == '📷') {
-        scanMathProblem(); // Triggers the AI Scanner
+        scanMathProblem();
       } else if (buttonText == '=') {
         try {
-          // Replace 'x' with '*' so the parser understands multiplication
-          String expression = equation.replaceAll('x', '*');
+          // Replace UI symbols with math_expressions syntax
+          String expression = equation
+            .replaceAll('x', '*')
+            .replaceAll('√', 'sqrt'); 
           
           Parser p = Parser();
           Expression exp = p.parse(expression);
           ContextModel cm = ContextModel();
           
-          // Evaluate the math expression
           result = '${exp.evaluate(EvaluationType.REAL, cm)}';
           
-          // Remove decimal if it's a whole number (e.g., 5.0 becomes 5)
           if (result.endsWith(".0")) {
             result = result.substring(0, result.length - 2);
           }
         } catch (e) {
-          result = "Error"; // Catches invalid syntax like "++"
+          result = "Error"; 
         }
       } else if (['sin', 'cos', 'tan', 'log'].contains(buttonText)) {
-        // Appends the function with an open parenthesis
         if (equation == "0") {
           equation = "$buttonText(";
         } else {
           equation = equation + "$buttonText(";
         }
+      } else if (buttonText == '√') {
+        if (equation == "0") {
+          equation = "√(";
+        } else {
+          equation = equation + "√(";
+        }
       } else {
         if (equation == "0") {
-          equation = buttonText; // Replace the initial 0
+          equation = buttonText; 
         } else {
-          equation = equation + buttonText; // Append new numbers/operators
+          equation = equation + buttonText; 
         }
       }
     });
@@ -133,7 +133,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     return Scaffold(
       body: Column(
         children: [
-          // Screen Display Area
           Expanded(
             flex: 1,
             child: Container(
@@ -161,7 +160,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             ),
           ),
           const Divider(color: Colors.white24, height: 1),
-          // Button Grid Area
           Expanded(
             flex: 2,
             child: Container(
@@ -170,7 +168,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 itemCount: buttons.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 4,
-                  childAspectRatio: 1.2,
+                  childAspectRatio: 1.1, // Slightly adjusted ratio to fit 7 rows better
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                 ),
@@ -186,20 +184,19 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   }
 
   Widget _buildButton(String text) {
-    // Determine button color based on its function
-    Color bgColor = Colors.grey[850]!; // Default dark grey
+    Color bgColor = Colors.grey[850]!;
     Color textColor = Colors.white;
 
     if (text == 'AC' || text == 'C' || text == '%') {
       bgColor = Colors.grey[600]!;
     } else if (text == '/' || text == 'x' || text == '-' || text == '+' || text == '=') {
-      bgColor = Colors.orange; // High-contrast orange for operators
-    } else if (['sin', 'cos', 'tan', 'log', '📷'].contains(text)) {
-      bgColor = Colors.blueGrey[800]!; // Distinct color for scientific functions and camera
+      bgColor = Colors.orange;
+    } else if (['sin', 'cos', 'tan', 'log', '√', '^', '(', ')', '📷'].contains(text)) {
+      bgColor = Colors.blueGrey[800]!; 
     }
 
     return InkWell(
-      onTap: () => buttonPressed(text), // Trigger the logic on tap
+      onTap: () => buttonPressed(text), 
       borderRadius: BorderRadius.circular(12),
       child: Ink(
         decoration: BoxDecoration(
