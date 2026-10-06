@@ -1,121 +1,221 @@
 import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const QubCalculatorClone());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class QubCalculatorClone extends StatelessWidget {
+  const QubCalculatorClone({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Scientific Calculator',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: const Color(0xFF1E1E1E), // Dark background
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const CalculatorScreen(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class CalculatorScreen extends StatefulWidget {
+  const CalculatorScreen({Key? key}) : super(key: key);
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<CalculatorScreen> createState() => _CalculatorScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _CalculatorScreenState extends State<CalculatorScreen> {
+  String equation = "0";
+  String result = "0";
 
-  void _incrementCounter() {
+  // Expanded WAEC/JAMB layout including a Camera button
+  final List<String> buttons = [
+    '📷', 'AC', 'C', '%',
+    'sin', 'cos', 'tan', '/',
+    '7', '8', '9', 'x',
+    '4', '5', '6', '-',
+    '1', '2', '3', '+',
+    'log', '0', '.', '=',
+  ];
+
+  // AI Camera Scanner Logic
+  Future<void> scanMathProblem() async {
+    final ImagePicker picker = ImagePicker();
+    // Launch the device camera
+    final XFile? image = await picker.pickImage(source: ImageSource.camera);
+
+    if (image != null) {
+      final inputImage = InputImage.fromFilePath(image.path);
+      final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
+
+      try {
+        // Process the image and extract text
+        final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
+
+        // Clean the recognized text to fit our parser
+        String scannedEquation = recognizedText.text
+            .replaceAll('\n', '')
+            .replaceAll(' ', '')
+            .replaceAll('X', 'x');
+
+        setState(() {
+          equation = scannedEquation.isEmpty ? "0" : scannedEquation;
+          result = "Scanned!";
+        });
+      } catch (e) {
+        setState(() {
+          result = "Scan Failed";
+        });
+      } finally {
+        textRecognizer.close();
+      }
+    }
+  }
+
+  // Core Logic: Handles button presses and updates the screen
+  void buttonPressed(String buttonText) {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      if (buttonText == 'AC') {
+        equation = "0";
+        result = "0";
+      } else if (buttonText == 'C') {
+        equation = equation.substring(0, equation.length - 1);
+        if (equation.isEmpty) {
+          equation = "0";
+        }
+      } else if (buttonText == '📷') {
+        scanMathProblem(); // Triggers the AI Scanner
+      } else if (buttonText == '=') {
+        try {
+          // Replace 'x' with '*' so the parser understands multiplication
+          String expression = equation.replaceAll('x', '*');
+          
+          Parser p = Parser();
+          Expression exp = p.parse(expression);
+          ContextModel cm = ContextModel();
+          
+          // Evaluate the math expression
+          result = '${exp.evaluate(EvaluationType.REAL, cm)}';
+          
+          // Remove decimal if it's a whole number (e.g., 5.0 becomes 5)
+          if (result.endsWith(".0")) {
+            result = result.substring(0, result.length - 2);
+          }
+        } catch (e) {
+          result = "Error"; // Catches invalid syntax like "++"
+        }
+      } else if (['sin', 'cos', 'tan', 'log'].contains(buttonText)) {
+        // Appends the function with an open parenthesis
+        if (equation == "0") {
+          equation = "$buttonText(";
+        } else {
+          equation = equation + "$buttonText(";
+        }
+      } else {
+        if (equation == "0") {
+          equation = buttonText; // Replace the initial 0
+        } else {
+          equation = equation + buttonText; // Append new numbers/operators
+        }
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+      body: Column(
+        children: [
+          // Screen Display Area
+          Expanded(
+            flex: 1,
+            child: Container(
+              padding: const EdgeInsets.all(24.0),
+              alignment: Alignment.bottomRight,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    equation,
+                    style: const TextStyle(fontSize: 36, color: Colors.white70),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    result,
+                    style: const TextStyle(
+                      fontSize: 48,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+          ),
+          const Divider(color: Colors.white24, height: 1),
+          // Button Grid Area
+          Expanded(
+            flex: 2,
+            child: Container(
+              padding: const EdgeInsets.all(8.0),
+              child: GridView.builder(
+                itemCount: buttons.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  childAspectRatio: 1.2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                ),
+                itemBuilder: (context, index) {
+                  return _buildButton(buttons[index]);
+                },
+              ),
+            ),
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+    );
+  }
+
+  Widget _buildButton(String text) {
+    // Determine button color based on its function
+    Color bgColor = Colors.grey[850]!; // Default dark grey
+    Color textColor = Colors.white;
+
+    if (text == 'AC' || text == 'C' || text == '%') {
+      bgColor = Colors.grey[600]!;
+    } else if (text == '/' || text == 'x' || text == '-' || text == '+' || text == '=') {
+      bgColor = Colors.orange; // High-contrast orange for operators
+    } else if (['sin', 'cos', 'tan', 'log', '📷'].contains(text)) {
+      bgColor = Colors.blueGrey[800]!; // Distinct color for scientific functions and camera
+    }
+
+    return InkWell(
+      onTap: () => buttonPressed(text), // Trigger the logic on tap
+      borderRadius: BorderRadius.circular(12),
+      child: Ink(
+        decoration: BoxDecoration(
+          color: bgColor,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+              color: textColor,
+            ),
+          ),
+        ),
       ),
     );
   }
