@@ -3,7 +3,6 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../models/calculator_mode.dart';
-import '../../services/math_scanner_service.dart';
 import '../equation/equation_screen.dart';
 import '../statistics/statistics_screen.dart';
 import '../matrix/matrix_screen.dart';
@@ -15,6 +14,7 @@ import '../history/calculation_history_repository.dart';
 import '../history/calculation_history_screen.dart';
 import '../formula_library/formula_library_screen.dart';
 import '../graphing/graphing_screen.dart';
+import '../camera_solver/camera_solver_screen.dart';
 import 'calculator_button.dart';
 import 'calculator_engine.dart';
 import 'calculator_state.dart';
@@ -22,7 +22,14 @@ import 'widgets/calculator_display.dart';
 import 'widgets/calculator_keypad.dart';
 
 class CalculatorScreen extends StatefulWidget {
-  const CalculatorScreen({super.key});
+  const CalculatorScreen({
+    super.key,
+    this.studyMode = true,
+    this.showAppBar = false,
+  });
+
+  final bool studyMode;
+  final bool showAppBar;
 
   @override
   State<CalculatorScreen> createState() =>
@@ -33,8 +40,6 @@ class _CalculatorScreenState
     extends State<CalculatorScreen> {
   final CalculatorState _state = CalculatorState();
   final CalculatorEngine _engine = const CalculatorEngine();
-  final MathScannerService _scanner =
-      const MathScannerService();
   final CalculationHistoryRepository _historyRepository =
       CalculationHistoryRepository();
 
@@ -71,37 +76,19 @@ class _CalculatorScreenState
   ];
 
   Future<void> _scanMathProblem() async {
-    if (!_scanner.isAvailable) {
+    if (!widget.studyMode) {
       _showMessage(
-        'Camera OCR is reserved for the Android/iOS build. '
-        'Keep testing the calculator in Chrome for now.',
+        'Camera Solver is disabled in Exam Mode.',
       );
       return;
     }
 
-    try {
-      final String? scanned =
-          await _scanner.scanFromCamera();
-
-      if (scanned == null || !mounted) {
-        return;
-      }
-
-      setState(() {
-        _state.equation =
-            scanned.isEmpty ? '0' : scanned;
-        _state.result =
-            scanned.isEmpty ? 'No equation found' : 'Scanned';
-      });
-    } on UnsupportedError catch (error) {
-      _showMessage(error.message ?? 'Camera is unavailable.');
-    } catch (_) {
-      if (!mounted) return;
-
-      setState(() {
-        _state.result = 'Scan failed';
-      });
-    }
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) =>
+            const CameraSolverScreen(),
+      ),
+    );
   }
 
   void _buttonPressed(String text) {
@@ -477,11 +464,13 @@ class _CalculatorScreenState
         _state.clearModifiers();
       });
 
-      await _historyRepository.add(
-        expression: expression,
-        result: formattedResult,
-        mode: _state.mode.label,
-      );
+      if (widget.studyMode) {
+        await _historyRepository.add(
+          expression: expression,
+          result: formattedResult,
+          mode: _state.mode.label,
+        );
+      }
     } catch (_) {
       if (!mounted) return;
 
@@ -492,6 +481,11 @@ class _CalculatorScreenState
   }
 
   Future<void> _openHistory() async {
+    if (!widget.studyMode) {
+      _showMessage('History is disabled in Exam Mode.');
+      return;
+    }
+
     final CalculationHistoryItem? selected =
         await Navigator.of(context).push<
             CalculationHistoryItem>(
@@ -522,6 +516,11 @@ class _CalculatorScreenState
   }
 
   Future<void> _openGraphing() async {
+    if (!widget.studyMode) {
+      _showMessage('Graphing is disabled in Exam Mode.');
+      return;
+    }
+
     await Navigator.of(context).push<void>(
       MaterialPageRoute<void>(
         builder: (BuildContext context) =>
@@ -533,6 +532,11 @@ class _CalculatorScreenState
   }
 
   Future<void> _openFormulaLibrary() async {
+    if (!widget.studyMode) {
+      _showMessage('Formula Library is disabled in Exam Mode.');
+      return;
+    }
+
     await Navigator.of(context).push<void>(
       MaterialPageRoute<void>(
         builder: (BuildContext context) =>
@@ -1011,6 +1015,19 @@ class _CalculatorScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: widget.showAppBar
+          ? AppBar(
+              title: Text(
+                widget.studyMode
+                    ? 'Study Calculator'
+                    : 'Exam Calculator',
+              ),
+              backgroundColor:
+                  const Color(0xFF0F172A),
+              surfaceTintColor:
+                  const Color(0xFF0F172A),
+            )
+          : null,
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
@@ -1065,6 +1082,8 @@ class _CalculatorScreenState
                               _openFormulaLibrary,
                           onGraphingTap:
                               _openGraphing,
+                          showStudyTools:
+                              widget.studyMode,
                         ),
                         const SizedBox(
                           height: 10,
@@ -1080,6 +1099,8 @@ class _CalculatorScreenState
                               _buttonPressed,
                           onScanPressed:
                               _scanMathProblem,
+                          showScanButton:
+                              widget.studyMode,
                         ),
                       ],
                     ),

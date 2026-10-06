@@ -16,6 +16,7 @@ class CalculatorDisplay extends StatelessWidget {
     required this.onHistoryTap,
     required this.onFormulaLibraryTap,
     required this.onGraphingTap,
+    this.showStudyTools = true,
   });
 
   final String equation;
@@ -29,6 +30,7 @@ class CalculatorDisplay extends StatelessWidget {
   final VoidCallback onHistoryTap;
   final VoidCallback onFormulaLibraryTap;
   final VoidCallback onGraphingTap;
+  final bool showStudyTools;
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +79,7 @@ class CalculatorDisplay extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 4),
+              if (showStudyTools) ...<Widget>[
               IconButton(
                 tooltip: 'Graphing',
                 onPressed: onGraphingTap,
@@ -124,6 +127,7 @@ class CalculatorDisplay extends StatelessWidget {
                   color: AppTheme.secondaryText,
                 ),
               ),
+              ],
               const SizedBox(width: 4),
               const Icon(
                 Icons.battery_5_bar,

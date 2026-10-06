@@ -11,6 +11,7 @@ class CalculatorKeypad extends StatelessWidget {
     required this.keypadButtons,
     required this.onPressed,
     required this.onScanPressed,
+    this.showScanButton = true,
   });
 
   final List<CalculatorButtonData> controlButtons;
@@ -18,6 +19,7 @@ class CalculatorKeypad extends StatelessWidget {
   final List<CalculatorButtonData> keypadButtons;
   final ValueChanged<String> onPressed;
   final VoidCallback onScanPressed;
+  final bool showScanButton;
 
   @override
   Widget build(BuildContext context) {
@@ -47,25 +49,27 @@ class CalculatorKeypad extends StatelessWidget {
           buttons: keypadButtons,
           onPressed: onPressed,
         ),
-        const SizedBox(height: 10),
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton.icon(
-            onPressed: onScanPressed,
-            icon: const Icon(Icons.camera_alt_outlined),
-            label: const Text('Scan problem'),
-            style: OutlinedButton.styleFrom(
-              minimumSize: const Size.fromHeight(48),
-              side: const BorderSide(
-                color: Color(0xFF475569),
-              ),
-              foregroundColor: const Color(0xFFE2E8F0),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(14),
+        if (showScanButton) ...<Widget>[
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: onScanPressed,
+              icon: const Icon(Icons.camera_alt_outlined),
+              label: const Text('Scan problem'),
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size.fromHeight(48),
+                side: const BorderSide(
+                  color: Color(0xFF475569),
+                ),
+                foregroundColor: const Color(0xFFE2E8F0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
               ),
             ),
           ),
-        ),
+        ],
       ],
     );
   }
