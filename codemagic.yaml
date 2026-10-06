@@ -1,0 +1,19 @@
+workflows:
+  android-release-workflow:
+    name: Scientific Calculator Android Build
+    instance_type: mac_mini_m1
+    environment:
+      flutter: stable
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: 'main'
+          include: true
+    scripts:
+      - name: Fetch Flutter dependencies
+        script: flutter pub get
+      - name: Build Android release APK
+        script: flutter build apk --release
+    artifacts:
+      - build/app/outputs/flutter-apk/app-release.apk
