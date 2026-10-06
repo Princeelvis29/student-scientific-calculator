@@ -10,6 +10,9 @@ import '../matrix/matrix_screen.dart';
 import '../vector/vector_screen.dart';
 import '../table/function_table_screen.dart';
 import '../complex/complex_screen.dart';
+import '../history/calculation_history_item.dart';
+import '../history/calculation_history_repository.dart';
+import '../history/calculation_history_screen.dart';
 import 'calculator_button.dart';
 import 'calculator_engine.dart';
 import 'calculator_state.dart';
@@ -30,6 +33,8 @@ class _CalculatorScreenState
   final CalculatorEngine _engine = const CalculatorEngine();
   final MathScannerService _scanner =
       const MathScannerService();
+  final CalculationHistoryRepository _historyRepository =
+      CalculationHistoryRepository();
 
   static const Map<String, String> _alphaKeys =
       <String, String>{
@@ -450,25 +455,68 @@ class _CalculatorScreenState
     });
   }
 
-  void _calculate() {
+  Future<void> _calculate() async {
     try {
+      final String expression =
+          _state.equation;
+
       final double value = _engine.evaluate(
-        _state.equation,
+        expression,
         degrees: _state.isDegreeMode,
         variables: _state.variables,
       );
 
+      final String formattedResult =
+          _engine.formatNumber(value);
+
       setState(() {
         _state.lastAnswer = value;
-        _state.result =
-            _engine.formatNumber(value);
+        _state.result = formattedResult;
         _state.clearModifiers();
       });
+
+      await _historyRepository.add(
+        expression: expression,
+        result: formattedResult,
+        mode: _state.mode.label,
+      );
     } catch (_) {
+      if (!mounted) return;
+
       setState(() {
         _state.result = 'Error';
       });
     }
+  }
+
+  Future<void> _openHistory() async {
+    final CalculationHistoryItem? selected =
+        await Navigator.of(context).push<
+            CalculationHistoryItem>(
+      MaterialPageRoute<CalculationHistoryItem>(
+        builder: (BuildContext context) =>
+            CalculationHistoryScreen(
+          repository: _historyRepository,
+        ),
+      ),
+    );
+
+    if (selected == null || !mounted) {
+      return;
+    }
+
+    setState(() {
+      _state.equation = selected.expression;
+      _state.result = selected.result;
+      _state.clearModifiers();
+
+      final double? numericResult =
+          double.tryParse(selected.result);
+
+      if (numericResult != null) {
+        _state.lastAnswer = numericResult;
+      }
+    });
   }
 
   Future<void> _selectRegister({
@@ -989,6 +1037,8 @@ class _CalculatorScreenState
                               _buttonPressed(
                             'DEG/RAD',
                           ),
+                          onHistoryTap:
+                              _openHistory,
                         ),
                         const SizedBox(
                           height: 10,

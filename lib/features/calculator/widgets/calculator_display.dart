@@ -13,6 +13,7 @@ class CalculatorDisplay extends StatelessWidget {
     required this.hyperbolicEnabled,
     required this.modeLabel,
     required this.onAngleModeTap,
+    required this.onHistoryTap,
   });
 
   final String equation;
@@ -23,6 +24,7 @@ class CalculatorDisplay extends StatelessWidget {
   final bool hyperbolicEnabled;
   final String modeLabel;
   final VoidCallback onAngleModeTap;
+  final VoidCallback onHistoryTap;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +72,23 @@ class CalculatorDisplay extends StatelessWidget {
                   color: AppTheme.mutedText,
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 4),
+              IconButton(
+                tooltip: 'Calculation history',
+                onPressed: onHistoryTap,
+                visualDensity: VisualDensity.compact,
+                constraints: const BoxConstraints(
+                  minWidth: 34,
+                  minHeight: 34,
+                ),
+                padding: EdgeInsets.zero,
+                icon: const Icon(
+                  Icons.history,
+                  size: 20,
+                  color: AppTheme.secondaryText,
+                ),
+              ),
+              const SizedBox(width: 4),
               const Icon(
                 Icons.battery_5_bar,
                 size: 20,
