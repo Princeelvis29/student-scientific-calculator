@@ -1,6 +1,6 @@
 enum CalculatorMode {
   comp('COMP', 'Scientific calculations', true),
-  stat('STAT', 'Statistics', false),
+  stat('STAT', 'Statistics', true),
   eqn('EQN', 'Equations & simultaneous equations', true),
   matrix('MATRIX', 'Matrix calculations', false),
   vector('VECTOR', 'Vector calculations', false),
