@@ -13,6 +13,7 @@ import '../complex/complex_screen.dart';
 import '../history/calculation_history_item.dart';
 import '../history/calculation_history_repository.dart';
 import '../history/calculation_history_screen.dart';
+import '../formula_library/formula_library_screen.dart';
 import 'calculator_button.dart';
 import 'calculator_engine.dart';
 import 'calculator_state.dart';
@@ -517,6 +518,15 @@ class _CalculatorScreenState
         _state.lastAnswer = numericResult;
       }
     });
+  }
+
+  Future<void> _openFormulaLibrary() async {
+    await Navigator.of(context).push<void>(
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) =>
+            const FormulaLibraryScreen(),
+      ),
+    );
   }
 
   Future<void> _selectRegister({
@@ -1039,6 +1049,8 @@ class _CalculatorScreenState
                           ),
                           onHistoryTap:
                               _openHistory,
+                          onFormulaLibraryTap:
+                              _openFormulaLibrary,
                         ),
                         const SizedBox(
                           height: 10,
