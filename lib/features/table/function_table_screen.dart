@@ -227,8 +227,6 @@ class _FunctionTableScreenState
     return Scaffold(
       appBar: AppBar(
         title: const Text('TABLE Mode'),
-        backgroundColor: AppTheme.background,
-        surfaceTintColor: AppTheme.background,
       ),
       body: SafeArea(
         child: Center(

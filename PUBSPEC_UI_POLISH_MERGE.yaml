@@ -1,0 +1,16 @@
+# Merge these entries into your existing pubspec.yaml.
+
+dependencies:
+  # Keep your existing dependencies.
+  shared_preferences: ^2.0.0
+
+dev_dependencies:
+  # Keep flutter_test and your existing dev dependencies.
+  flutter_launcher_icons: ^0.14.0
+  flutter_native_splash: ^2.4.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/branding/arktech_app_icon.png
+    - assets/branding/arktech_splash_logo.png

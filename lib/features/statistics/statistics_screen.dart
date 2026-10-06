@@ -374,10 +374,6 @@ class _StatisticsModeScreenState
     return Scaffold(
       appBar: AppBar(
         title: const Text('STAT Mode'),
-        backgroundColor:
-            AppTheme.background,
-        surfaceTintColor:
-            AppTheme.background,
       ),
       body: SafeArea(
         child: Center(

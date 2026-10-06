@@ -391,8 +391,6 @@ class _VectorModeScreenState
     return Scaffold(
       appBar: AppBar(
         title: const Text('VECTOR Mode'),
-        backgroundColor: AppTheme.background,
-        surfaceTintColor: AppTheme.background,
       ),
       body: SafeArea(
         child: Center(

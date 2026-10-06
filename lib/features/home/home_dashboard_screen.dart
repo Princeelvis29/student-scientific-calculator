@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_theme.dart';
 import '../../models/app_experience_mode.dart';
 import '../../services/app_mode_repository.dart';
+import '../../services/interaction_feedback_service.dart';
 import '../calculator/calculator_screen.dart';
 import '../camera_solver/camera_solver_screen.dart';
 import '../equation/equation_screen.dart';
@@ -206,12 +207,10 @@ class _HomeDashboardScreenState
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Arktech Student Scientific Calculator',
+          'Arktech Calculator',
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
         ),
-        backgroundColor:
-            AppTheme.background,
-        surfaceTintColor:
-            AppTheme.background,
       ),
       body: SafeArea(
         child: _loading
@@ -336,7 +335,7 @@ class _HomeDashboardScreenState
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppTheme.display,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius:
             BorderRadius.circular(20),
         border: Border.all(
@@ -441,11 +440,16 @@ class _DashboardCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppTheme.display,
+      color: Theme.of(context).colorScheme.surface,
       borderRadius:
           BorderRadius.circular(18),
       child: InkWell(
-        onTap: item.onTap,
+        onTap: () {
+          InteractionFeedbackService.tap(
+            context,
+          );
+          item.onTap();
+        },
         borderRadius:
             BorderRadius.circular(18),
         child: Container(
@@ -455,12 +459,12 @@ class _DashboardCard extends StatelessWidget {
                 BorderRadius.circular(18),
             border: Border.all(
               color: item.enabled
-                  ? const Color(
-                      0xFF334155,
-                    )
-                  : const Color(
-                      0xFF475569,
-                    ),
+                  ? Theme.of(context)
+                      .colorScheme
+                      .outlineVariant
+                  : Theme.of(context)
+                      .disabledColor
+                      .withOpacity(0.35),
             ),
           ),
           child: Row(

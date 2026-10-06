@@ -1022,10 +1022,6 @@ class _CalculatorScreenState
                     ? 'Study Calculator'
                     : 'Exam Calculator',
               ),
-              backgroundColor:
-                  const Color(0xFF0F172A),
-              surfaceTintColor:
-                  const Color(0xFF0F172A),
             )
           : null,
       body: SafeArea(

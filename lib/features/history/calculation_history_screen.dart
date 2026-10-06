@@ -141,8 +141,6 @@ class _CalculationHistoryScreenState
     return Scaffold(
       appBar: AppBar(
         title: const Text('Calculation History'),
-        backgroundColor: AppTheme.background,
-        surfaceTintColor: AppTheme.background,
         actions: <Widget>[
           PopupMenuButton<_HistoryMenuAction>(
             tooltip: 'History options',

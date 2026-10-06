@@ -216,8 +216,6 @@ class _GraphFunctionTableScreenState
     return Scaffold(
       appBar: AppBar(
         title: const Text('Graph Table'),
-        backgroundColor: AppTheme.background,
-        surfaceTintColor: AppTheme.background,
       ),
       body: SafeArea(
         child: Center(

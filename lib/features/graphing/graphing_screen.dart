@@ -457,10 +457,6 @@ class _GraphingScreenState
     return Scaffold(
       appBar: AppBar(
         title: const Text('Graphing'),
-        backgroundColor:
-            AppTheme.background,
-        surfaceTintColor:
-            AppTheme.background,
         actions: <Widget>[
           IconButton(
             tooltip: 'Function table',

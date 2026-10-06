@@ -492,10 +492,6 @@ class _MatrixModeScreenState
     return Scaffold(
       appBar: AppBar(
         title: const Text('MATRIX Mode'),
-        backgroundColor:
-            AppTheme.background,
-        surfaceTintColor:
-            AppTheme.background,
       ),
       body: SafeArea(
         child: Center(

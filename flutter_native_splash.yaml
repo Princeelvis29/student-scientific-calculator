@@ -1,0 +1,16 @@
+flutter_native_splash:
+  color: "#0F172A"
+  image: assets/branding/arktech_splash_logo.png
+  color_dark: "#0F172A"
+  image_dark: assets/branding/arktech_splash_logo.png
+
+  android_12:
+    color: "#0F172A"
+    image: assets/branding/arktech_splash_logo.png
+    color_dark: "#0F172A"
+    image_dark: assets/branding/arktech_splash_logo.png
+
+  android: true
+  ios: true
+  web: true
+  fullscreen: true

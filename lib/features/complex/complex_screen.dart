@@ -362,8 +362,6 @@ class _ComplexModeScreenState
     return Scaffold(
       appBar: AppBar(
         title: const Text('CMPLX Mode'),
-        backgroundColor: AppTheme.background,
-        surfaceTintColor: AppTheme.background,
       ),
       body: SafeArea(
         child: Center(

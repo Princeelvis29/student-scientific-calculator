@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../calculator_button.dart';
+import '../../../services/interaction_feedback_service.dart';
 
 class CalculatorKey extends StatelessWidget {
   const CalculatorKey({
@@ -58,10 +59,25 @@ class CalculatorKey extends StatelessWidget {
         break;
     }
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () => onPressed(button.label),
+    return Semantics(
+      button: true,
+      label: button.secondaryLabel == null
+          ? button.label
+          : '${button.label}, alternate ${button.secondaryLabel}',
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            InteractionFeedbackService.tap(
+              context,
+              stronger:
+                  button.kind ==
+                          CalculatorButtonKind.equals ||
+                      button.kind ==
+                          CalculatorButtonKind.danger,
+            );
+            onPressed(button.label);
+          },
         borderRadius: BorderRadius.circular(
           compact ? 12 : 14,
         ),
@@ -115,6 +131,7 @@ class CalculatorKey extends StatelessWidget {
                 ],
               ),
             ),
+          ),
           ),
         ),
       ),

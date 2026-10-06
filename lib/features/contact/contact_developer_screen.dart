@@ -64,7 +64,7 @@ class ContactDeveloperScreen extends StatelessWidget {
 
     final Uri uri = Uri.parse(
       'https://wa.me/$digits'
-      '?text=${Uri.encodeComponent('Hello Arktech Solutions, I am contacting you from the Arktech Student Scientific Calculator app.')}',
+      '?text=${Uri.encodeComponent('Hello Arktech Solutions, I am contacting you from the Arktech Calculator app.')}',
     );
 
     await _launch(
@@ -84,7 +84,7 @@ class ContactDeveloperScreen extends StatelessWidget {
       path: email,
       queryParameters: const <String, String>{
         'subject':
-            'Arktech Student Scientific Calculator Enquiry',
+            'Arktech Calculator Enquiry',
       },
     );
 
@@ -124,10 +124,6 @@ class ContactDeveloperScreen extends StatelessWidget {
       appBar: AppBar(
         title:
             const Text('Contact Developer'),
-        backgroundColor:
-            AppTheme.background,
-        surfaceTintColor:
-            AppTheme.background,
       ),
       body: SafeArea(
         child: Center(
@@ -332,7 +328,7 @@ class ContactDeveloperScreen extends StatelessWidget {
           ),
           const SizedBox(height: 22),
           const Text(
-            'Developer of Arktech Student Scientific Calculator',
+            'Developer of Arktech Calculator',
             style: TextStyle(
               color: Colors.white,
               fontSize: 18,

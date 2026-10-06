@@ -115,8 +115,6 @@ class _FormulaLibraryScreenState
     return Scaffold(
       appBar: AppBar(
         title: const Text('Formula Library'),
-        backgroundColor: AppTheme.background,
-        surfaceTintColor: AppTheme.background,
         actions: <Widget>[
           IconButton(
             tooltip: _favoritesOnly

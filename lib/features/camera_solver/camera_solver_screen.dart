@@ -140,10 +140,6 @@ class _CameraSolverScreenState
     return Scaffold(
       appBar: AppBar(
         title: const Text('Camera Solver'),
-        backgroundColor:
-            AppTheme.background,
-        surfaceTintColor:
-            AppTheme.background,
       ),
       body: SafeArea(
         child: Center(
