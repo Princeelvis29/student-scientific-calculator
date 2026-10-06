@@ -3,9 +3,9 @@ enum CalculatorMode {
   stat('STAT', 'Statistics', true),
   eqn('EQN', 'Equations & simultaneous equations', true),
   matrix('MATRIX', 'Matrix calculations', true),
-  vector('VECTOR', 'Vector calculations', false),
-  table('TABLE', 'Function tables', false),
-  complex('CMPLX', 'Complex numbers', false);
+  vector('VECTOR', 'Vector calculations', true),
+  table('TABLE', 'Function tables', true),
+  complex('CMPLX', 'Complex numbers', true);
 
   const CalculatorMode(
     this.label,
