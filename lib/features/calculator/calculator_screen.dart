@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/calculator_mode.dart';
 import '../../services/math_scanner_service.dart';
+import '../equation/equation_screen.dart';
 import 'calculator_button.dart';
 import 'calculator_engine.dart';
 import 'calculator_state.dart';
@@ -631,11 +632,23 @@ class _CalculatorScreenState
       },
     );
 
-    if (selected != null && mounted) {
-      setState(() {
-        _state.mode = selected;
-      });
+    if (selected == null || !mounted) {
+      return;
     }
+
+    if (selected == CalculatorMode.eqn) {
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (BuildContext context) =>
+              const EquationModeScreen(),
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _state.mode = selected;
+    });
   }
 
   void _showMessage(String message) {
