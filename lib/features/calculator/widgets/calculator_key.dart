@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_theme.dart';
-import '../calculator_button.dart';
 import '../../../services/interaction_feedback_service.dart';
+import '../calculator_button.dart';
 
 class CalculatorKey extends StatelessWidget {
   const CalculatorKey({
@@ -78,60 +78,66 @@ class CalculatorKey extends StatelessWidget {
             );
             onPressed(button.label);
           },
-        borderRadius: BorderRadius.circular(
-          compact ? 12 : 14,
-        ),
-        child: Ink(
-          decoration: BoxDecoration(
-            color: background,
-            borderRadius: BorderRadius.circular(
-              compact ? 12 : 14,
-            ),
-            border: Border.all(color: border),
+          borderRadius: BorderRadius.circular(
+            compact ? 11 : 14,
           ),
-          child: Center(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: compact ? 4 : 6,
-                vertical: compact ? 10 : 7,
+          child: Ink(
+            decoration: BoxDecoration(
+              color: background,
+              borderRadius: BorderRadius.circular(
+                compact ? 11 : 14,
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  if (button.secondaryLabel != null)
-                    Text(
-                      button.secondaryLabel!,
-                      maxLines: 1,
-                      style: const TextStyle(
-                        fontSize: 9,
-                        color: Color(0xFFFBBF24),
-                        fontWeight: FontWeight.w700,
+              border: Border.all(color: border),
+            ),
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: compact ? 3 : 6,
+                  vertical: compact ? 4 : 7,
+                ),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Column(
+                    mainAxisAlignment:
+                        MainAxisAlignment.center,
+                    children: <Widget>[
+                      if (button.secondaryLabel != null)
+                        Text(
+                          button.secondaryLabel!,
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontSize: compact ? 8 : 9,
+                            color:
+                                const Color(0xFFFBBF24),
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      if (button.alphaLabel != null)
+                        Text(
+                          button.alphaLabel!,
+                          maxLines: 1,
+                          style: TextStyle(
+                            fontSize: compact ? 8 : 9,
+                            color:
+                                const Color(0xFF60A5FA),
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      Text(
+                        button.label,
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: compact ? 15 : 17,
+                          fontWeight: FontWeight.w700,
+                          color: foreground,
+                        ),
                       ),
-                    ),
-                  if (button.alphaLabel != null)
-                    Text(
-                      button.alphaLabel!,
-                      maxLines: 1,
-                      style: const TextStyle(
-                        fontSize: 9,
-                        color: Color(0xFF60A5FA),
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  Text(
-                    button.label,
-                    maxLines: 1,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: compact ? 13 : 17,
-                      fontWeight: FontWeight.w700,
-                      color: foreground,
-                    ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
-          ),
           ),
         ),
       ),

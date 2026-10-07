@@ -1036,69 +1036,102 @@ class _CalculatorScreenState
                 BuildContext context,
                 BoxConstraints constraints,
               ) {
-                return SingleChildScrollView(
-                  padding:
-                      const EdgeInsets.all(12),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: math.max(
-                        0.0,
-                        constraints.maxHeight -
-                            24,
-                      ),
-                    ),
-                    child: Column(
-                      children: <Widget>[
-                        CalculatorDisplay(
-                          equation:
-                              _state.equation,
-                          result:
-                              _state.result,
-                          isDegreeMode:
-                              _state
-                                  .isDegreeMode,
-                          shiftEnabled:
-                              _state
-                                  .shiftEnabled,
-                          alphaEnabled:
-                              _state
-                                  .alphaEnabled,
-                          hyperbolicEnabled:
-                              _state
-                                  .hyperbolicEnabled,
-                          modeLabel:
-                              _state.mode.label,
-                          onAngleModeTap: () =>
-                              _buttonPressed(
-                            'DEG/RAD',
+                final MediaQueryData media =
+                    MediaQuery.of(context);
+
+                final bool compactPhone =
+                    constraints.maxWidth < 430 ||
+                    constraints.maxHeight < 760;
+
+                final double horizontalPadding =
+                    compactPhone ? 8 : 12;
+
+                // SafeArea handles Android gesture/3-button navigation.
+                // Extra bottom breathing room ensures the last key row can
+                // scroll fully above the system navigation area.
+                final double bottomPadding =
+                    compactPhone ? 12 : 18;
+
+                return Scrollbar(
+                  child: SingleChildScrollView(
+                    keyboardDismissBehavior:
+                        ScrollViewKeyboardDismissBehavior.onDrag,
+                    padding: EdgeInsets.fromLTRB(
+                      horizontalPadding,
+                      compactPhone ? 6 : 12,
+                      horizontalPadding,
+                      bottomPadding +
+                          math.min(
+                            media.viewPadding.bottom,
+                            8,
                           ),
-                          onHistoryTap:
-                              _openHistory,
-                          onFormulaLibraryTap:
-                              _openFormulaLibrary,
-                          onGraphingTap:
-                              _openGraphing,
-                          showStudyTools:
-                              widget.studyMode,
+                    ),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: math.max(
+                          0.0,
+                          constraints.maxHeight -
+                              (compactPhone ? 18 : 24),
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        CalculatorKeypad(
-                          controlButtons:
-                              _controlButtons(),
-                          scientificButtons:
-                              _scientificButtons(),
-                          keypadButtons:
-                              _keypadButtons(),
-                          onPressed:
-                              _buttonPressed,
-                          onScanPressed:
-                              _scanMathProblem,
-                          showScanButton:
-                              widget.studyMode,
-                        ),
-                      ],
+                      ),
+                      child: Column(
+                        children: <Widget>[
+                          CalculatorDisplay(
+                            equation:
+                                _state.equation,
+                            result:
+                                _state.result,
+                            isDegreeMode:
+                                _state
+                                    .isDegreeMode,
+                            shiftEnabled:
+                                _state
+                                    .shiftEnabled,
+                            alphaEnabled:
+                                _state
+                                    .alphaEnabled,
+                            hyperbolicEnabled:
+                                _state
+                                    .hyperbolicEnabled,
+                            modeLabel:
+                                _state.mode.label,
+                            onAngleModeTap: () =>
+                                _buttonPressed(
+                              'DEG/RAD',
+                            ),
+                            onHistoryTap:
+                                _openHistory,
+                            onFormulaLibraryTap:
+                                _openFormulaLibrary,
+                            onGraphingTap:
+                                _openGraphing,
+                            showStudyTools:
+                                widget.studyMode,
+                            compact:
+                                compactPhone,
+                          ),
+                          SizedBox(
+                            height:
+                                compactPhone ? 6 : 10,
+                          ),
+                          CalculatorKeypad(
+                            controlButtons:
+                                _controlButtons(),
+                            scientificButtons:
+                                _scientificButtons(),
+                            keypadButtons:
+                                _keypadButtons(),
+                            onPressed:
+                                _buttonPressed,
+                            onScanPressed:
+                                _scanMathProblem,
+                            showScanButton:
+                                widget.studyMode,
+                            compact:
+                                compactPhone,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
