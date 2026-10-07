@@ -8,7 +8,7 @@ plugins {
 }
 
 // Load Android release signing information from android/key.properties.
-// Codemagic will create this file securely during the release build.
+// Codemagic creates this file securely during release builds.
 val keystoreProperties = Properties()
 val keystorePropertiesFile = rootProject.file("key.properties")
 
@@ -32,9 +32,6 @@ android {
         // Permanent Android application ID for Arktech Calculator.
         applicationId = "com.arktechsolutions.arktechcalculator"
 
-        // You can update the following values to match your application needs.
-        // For more information, see:
-        // https://flutter.dev/to/review-gradle-config
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
@@ -52,8 +49,17 @@ android {
 
     buildTypes {
         release {
-            // Production builds are signed using the Arktech upload keystore.
             signingConfig = signingConfigs.getByName("release")
+
+            // Enable release optimization and shrinking.
+            isMinifyEnabled = true
+            isShrinkResources = true
+
+            // Include Flutter/Android defaults plus Arktech's ML Kit rules.
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 }
