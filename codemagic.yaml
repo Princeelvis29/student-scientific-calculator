@@ -1,59 +1,85 @@
 workflows:
   android-ci:
-    name: Android CI - Tests and APK
+    name: Arktech Calculator - Android CI
     instance_type: linux_x2
     max_build_duration: 60
+
     environment:
       flutter: stable
       java: 17
+
     cache:
       cache_paths:
         - $HOME/.pub-cache
         - $HOME/.gradle/caches
         - $HOME/.gradle/wrapper
+
     scripts:
       - name: Flutter environment
         script: |
           flutter --version
           flutter doctor -v
+
       - name: Get packages
         script: |
           flutter pub get
+
       - name: Analyze
         script: |
           flutter analyze
+
       - name: Run tests
         script: |
           flutter test
+
       - name: Build debug APK
         script: |
           flutter build apk --debug
+
     artifacts:
       - build/app/outputs/flutter-apk/app-debug.apk
-      - flutter_drive.log
+
 
   android-release:
-    name: Android Release - Signed APK and AAB
+    name: Arktech Calculator - Signed APK and AAB
     instance_type: linux_x2
     max_build_duration: 60
+
     environment:
       flutter: stable
       java: 17
+
       android_signing:
         - arktech_upload_keystore
+
+      vars:
+        PACKAGE_NAME: "com.arktechsolutions.arktechcalculator"
+
     cache:
       cache_paths:
         - $HOME/.pub-cache
         - $HOME/.gradle/caches
         - $HOME/.gradle/wrapper
+
     scripts:
+      - name: Flutter environment
+        script: |
+          flutter --version
+          flutter doctor -v
+
       - name: Get packages
         script: |
           flutter pub get
-      - name: Test
+
+      - name: Analyze
+        script: |
+          flutter analyze
+
+      - name: Run tests
         script: |
           flutter test
-      - name: Configure Android signing
+
+      - name: Configure Android release signing
         script: |
           cat > "$CM_BUILD_DIR/android/key.properties" <<EOF
           storePassword=$CM_KEYSTORE_PASSWORD
@@ -61,43 +87,70 @@ workflows:
           keyAlias=$CM_KEY_ALIAS
           storeFile=$CM_KEYSTORE_PATH
           EOF
-      - name: Build release APK
+
+          echo "Android release signing configured."
+          echo "Alias: $CM_KEY_ALIAS"
+          echo "Keystore path available: $(test -f "$CM_KEYSTORE_PATH" && echo yes || echo no)"
+
+      - name: Build signed release APK
         script: |
           flutter build apk --release \
             --build-number=$BUILD_NUMBER
-      - name: Build release AAB
+
+      - name: Build signed release AAB
         script: |
           flutter build appbundle --release \
             --build-number=$BUILD_NUMBER
+
     artifacts:
       - build/app/outputs/flutter-apk/app-release.apk
       - build/app/outputs/bundle/release/app-release.aab
       - build/**/outputs/**/mapping.txt
 
+
   android-play-internal:
-    name: Android Play Internal
+    name: Arktech Calculator - Google Play Internal
     instance_type: linux_x2
     max_build_duration: 60
+
     environment:
       flutter: stable
       java: 17
+
       android_signing:
         - arktech_upload_keystore
+
       groups:
         - google_play_credentials
+
+      vars:
+        PACKAGE_NAME: "com.arktechsolutions.arktechcalculator"
+
     cache:
       cache_paths:
         - $HOME/.pub-cache
         - $HOME/.gradle/caches
         - $HOME/.gradle/wrapper
+
     scripts:
+      - name: Flutter environment
+        script: |
+          flutter --version
+          flutter doctor -v
+
       - name: Get packages
         script: |
           flutter pub get
-      - name: Test
+
+      - name: Analyze
+        script: |
+          flutter analyze
+
+      - name: Run tests
         script: |
           flutter test
-      - name: Configure Android signing
+
+      - name: Configure Android release signing
         script: |
           cat > "$CM_BUILD_DIR/android/key.properties" <<EOF
           storePassword=$CM_KEYSTORE_PASSWORD
@@ -105,13 +158,32 @@ workflows:
           keyAlias=$CM_KEY_ALIAS
           storeFile=$CM_KEYSTORE_PATH
           EOF
+
+          echo "Android release signing configured."
+
+      - name: Determine Google Play build number
+        script: |
+          LATEST_GOOGLE_PLAY_BUILD_NUMBER=$(google-play get-latest-build-number \
+            --package-name "$PACKAGE_NAME" || true)
+
+          if [ -z "$LATEST_GOOGLE_PLAY_BUILD_NUMBER" ]; then
+            UPDATED_BUILD_NUMBER=$BUILD_NUMBER
+          else
+            UPDATED_BUILD_NUMBER=$((LATEST_GOOGLE_PLAY_BUILD_NUMBER + 1))
+          fi
+
+          echo "UPDATED_BUILD_NUMBER=$UPDATED_BUILD_NUMBER" >> "$CM_ENV"
+          echo "Using Android versionCode: $UPDATED_BUILD_NUMBER"
+
       - name: Build signed AAB
         script: |
           flutter build appbundle --release \
-            --build-number=$BUILD_NUMBER
+            --build-number=$UPDATED_BUILD_NUMBER
+
     artifacts:
       - build/app/outputs/bundle/release/app-release.aab
       - build/**/outputs/**/mapping.txt
+
     publishing:
       google_play:
         credentials: $GOOGLE_PLAY_SERVICE_ACCOUNT_CREDENTIALS
