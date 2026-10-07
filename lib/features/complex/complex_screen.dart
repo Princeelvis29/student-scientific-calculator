@@ -439,7 +439,7 @@ class _ComplexModeScreenState
             CrossAxisAlignment.stretch,
         children: <Widget>[
           DropdownButtonFormField<ComplexOperation>(
-            value: _operation,
+            initialValue: _operation,
             decoration: const InputDecoration(
               labelText: 'Operation',
               border: OutlineInputBorder(),
@@ -650,7 +650,7 @@ class _ComplexModeScreenState
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: const Color(0xFF7F1D1D)
-            .withOpacity(0.22),
+            .withValues(alpha: 0.22),
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
           color: const Color(0xFFB91C1C),

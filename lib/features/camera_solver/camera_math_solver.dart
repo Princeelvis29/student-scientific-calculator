@@ -284,8 +284,6 @@ class CameraMathSolver {
 
     final String coefficientText =
         engine.formatNumber(coefficient);
-    final String constantText =
-        engine.formatNumber(constant);
     final String answer =
         engine.formatNumber(x);
 
@@ -366,7 +364,7 @@ class CameraMathSolver {
       answer: 'Could not solve automatically',
       steps: <String>[
         'Recognized: $cleaned',
-        if (extra != null) extra,
+        ?extra,
         'Correct OCR mistakes manually and try again.',
         'Current local camera solver supports numeric expressions plus one-variable linear and quadratic equations.',
       ],

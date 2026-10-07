@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 class MatrixData {
   MatrixData(List<List<double>> values)
       : values = values

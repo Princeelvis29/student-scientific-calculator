@@ -361,7 +361,7 @@ class _GraphFunctionTableScreenState
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: const Color(0xFF7F1D1D)
-            .withOpacity(0.22),
+            .withValues(alpha: 0.22),
         borderRadius:
             BorderRadius.circular(14),
         border: Border.all(

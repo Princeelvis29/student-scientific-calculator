@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../core/settings/app_ui_controller.dart';
 import '../../core/settings/app_ui_preferences.dart';
-import '../../core/theme/app_theme.dart';
 import '../../models/app_experience_mode.dart';
 import '../../services/app_mode_repository.dart';
 import '../../services/interaction_feedback_service.dart';
@@ -172,7 +171,7 @@ class _SettingsScreenState
                     children: <Widget>[
                       DropdownButtonFormField<
                           AppThemePreference>(
-                        value: prefs.theme,
+                        initialValue: prefs.theme,
                         decoration:
                             const InputDecoration(
                           labelText:
@@ -218,7 +217,7 @@ class _SettingsScreenState
                       ),
                       DropdownButtonFormField<
                           AppTextSize>(
-                        value: prefs.textSize,
+                        initialValue: prefs.textSize,
                         decoration:
                             const InputDecoration(
                           labelText:
@@ -261,20 +260,23 @@ class _SettingsScreenState
                       const SizedBox(
                         height: 4,
                       ),
-                      SwitchListTile(
-                        contentPadding:
-                            EdgeInsets.zero,
-                        title: const Text(
-                          'High contrast',
+                      Material(
+                        color: Colors.transparent,
+                        child: SwitchListTile(
+                          contentPadding:
+                              EdgeInsets.zero,
+                          title: const Text(
+                            'High contrast',
+                          ),
+                          subtitle:
+                              const Text(
+                            'Strengthens borders and surface contrast.',
+                          ),
+                          value:
+                              prefs.highContrast,
+                          onChanged:
+                              ui.setHighContrast,
                         ),
-                        subtitle:
-                            const Text(
-                          'Strengthens borders and surface contrast.',
-                        ),
-                        value:
-                            prefs.highContrast,
-                        onChanged:
-                            ui.setHighContrast,
                       ),
                     ],
                   ),
@@ -289,39 +291,45 @@ class _SettingsScreenState
                       'Control physical and audible key feedback.',
                   child: Column(
                     children: <Widget>[
-                      SwitchListTile(
-                        contentPadding:
-                            EdgeInsets.zero,
-                        title: const Text(
-                          'Haptics / vibration',
+                      Material(
+                        color: Colors.transparent,
+                        child: SwitchListTile(
+                          contentPadding:
+                              EdgeInsets.zero,
+                          title: const Text(
+                            'Haptics / vibration',
+                          ),
+                          subtitle:
+                              const Text(
+                            'Provides tactile feedback when calculator keys are pressed.',
+                          ),
+                          value: prefs
+                              .hapticsEnabled,
+                          onChanged:
+                              ui.setHaptics,
                         ),
-                        subtitle:
-                            const Text(
-                          'Provides tactile feedback when calculator keys are pressed.',
-                        ),
-                        value: prefs
-                            .hapticsEnabled,
-                        onChanged:
-                            ui.setHaptics,
                       ),
                       Divider(
                         color: scheme
                             .outlineVariant,
                       ),
-                      SwitchListTile(
-                        contentPadding:
-                            EdgeInsets.zero,
-                        title: const Text(
-                          'Button sounds',
+                      Material(
+                        color: Colors.transparent,
+                        child: SwitchListTile(
+                          contentPadding:
+                              EdgeInsets.zero,
+                          title: const Text(
+                            'Button sounds',
+                          ),
+                          subtitle:
+                              const Text(
+                            'Optional system click sound for calculator keys.',
+                          ),
+                          value: prefs
+                              .buttonSoundsEnabled,
+                          onChanged:
+                              ui.setButtonSounds,
                         ),
-                        subtitle:
-                            const Text(
-                          'Optional system click sound for calculator keys.',
-                        ),
-                        value: prefs
-                            .buttonSoundsEnabled,
-                        onChanged:
-                            ui.setButtonSounds,
                       ),
                     ],
                   ),
@@ -426,7 +434,7 @@ class _SettingsSection
                     Alignment.center,
                 decoration: BoxDecoration(
                   color: scheme.primary
-                      .withOpacity(0.12),
+                      .withValues(alpha: 0.12),
                   borderRadius:
                       BorderRadius.circular(
                     12,

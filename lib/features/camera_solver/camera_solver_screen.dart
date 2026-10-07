@@ -388,7 +388,7 @@ class _CameraSolverScreenState
         border: Border.all(
           color: solution.isSolved
               ? AppTheme.equals
-                  .withOpacity(0.45)
+                  .withValues(alpha: 0.45)
               : const Color(0xFFB91C1C),
         ),
       ),
@@ -455,7 +455,7 @@ class _CameraSolverScreenState
                     decoration:
                         BoxDecoration(
                       color: AppTheme.equals
-                          .withOpacity(0.16),
+                          .withValues(alpha: 0.16),
                       shape: BoxShape.circle,
                     ),
                     child: Text(

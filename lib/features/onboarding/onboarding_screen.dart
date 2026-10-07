@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../core/theme/app_theme.dart';
 import '../../services/interaction_feedback_service.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -214,7 +213,7 @@ class _OnboardingScreenState
                                       colors: <Color>[
                                         page.accent,
                                         page.accent
-                                            .withOpacity(
+                                            .withValues(alpha: 
                                           0.45,
                                         ),
                                       ],
@@ -229,7 +228,7 @@ class _OnboardingScreenState
                                       BoxShadow(
                                         color: page
                                             .accent
-                                            .withOpacity(
+                                            .withValues(alpha: 
                                           0.22,
                                         ),
                                         blurRadius:

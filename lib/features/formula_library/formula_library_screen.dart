@@ -505,7 +505,7 @@ class _FormulaCard extends StatelessWidget {
             border: Border.all(
               color: isFavorite
                   ? AppTheme.equals
-                      .withOpacity(0.55)
+                      .withValues(alpha: 0.55)
                   : const Color(
                       0xFF334155,
                     ),
@@ -562,7 +562,7 @@ class _FormulaCard extends StatelessWidget {
                               BoxDecoration(
                             color: AppTheme
                                 .equals
-                                .withOpacity(
+                                .withValues(alpha: 
                               0.14,
                             ),
                             borderRadius:
@@ -661,14 +661,14 @@ class _DetailPanel extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: prominent
-            ? AppTheme.equals.withOpacity(0.10)
+            ? AppTheme.equals.withValues(alpha: 0.10)
             : AppTheme.display,
         borderRadius:
             BorderRadius.circular(14),
         border: Border.all(
           color: prominent
               ? AppTheme.equals
-                  .withOpacity(0.5)
+                  .withValues(alpha: 0.5)
               : const Color(0xFF334155),
         ),
       ),

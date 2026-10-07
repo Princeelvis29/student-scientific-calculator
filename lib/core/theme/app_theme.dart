@@ -108,7 +108,7 @@ class AppTheme {
         filled: true,
         fillColor:
             scheme.surfaceContainerHighest
-                .withOpacity(
+                .withValues(alpha: 
           scheme.brightness ==
                   Brightness.dark
               ? 0.24

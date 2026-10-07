@@ -314,7 +314,7 @@ class _HistoryCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: item.isFavorite
-              ? AppTheme.equals.withOpacity(0.65)
+              ? AppTheme.equals.withValues(alpha: 0.65)
               : const Color(0xFF334155),
         ),
       ),

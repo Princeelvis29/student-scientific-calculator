@@ -251,7 +251,7 @@ class ContactDeveloperScreen extends StatelessWidget {
         boxShadow: <BoxShadow>[
           BoxShadow(
             color: const Color(0xFF2563EB)
-                .withOpacity(0.18),
+                .withValues(alpha: 0.18),
             blurRadius: 28,
             offset: const Offset(0, 12),
           ),
@@ -272,14 +272,14 @@ class ContactDeveloperScreen extends StatelessWidget {
                     Alignment.center,
                 decoration: BoxDecoration(
                   color: Colors.white
-                      .withOpacity(0.16),
+                      .withValues(alpha: 0.16),
                   borderRadius:
                       BorderRadius.circular(
                     18,
                   ),
                   border: Border.all(
                     color: Colors.white
-                        .withOpacity(0.28),
+                        .withValues(alpha: 0.28),
                   ),
                 ),
                 child: const Text(

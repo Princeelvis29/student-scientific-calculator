@@ -464,7 +464,7 @@ class _DashboardCard extends StatelessWidget {
                       .outlineVariant
                   : Theme.of(context)
                       .disabledColor
-                      .withOpacity(0.35),
+                      .withValues(alpha: 0.35),
             ),
           ),
           child: Row(
@@ -479,7 +479,7 @@ class _DashboardCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: item.enabled
                       ? AppTheme.equals
-                          .withOpacity(
+                          .withValues(alpha: 
                           0.13,
                         )
                       : AppTheme.numberKey,

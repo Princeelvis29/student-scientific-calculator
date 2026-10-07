@@ -567,7 +567,7 @@ class _MatrixModeScreenState
         children: <Widget>[
           DropdownButtonFormField<
               MatrixOperation>(
-            value: _operation,
+            initialValue: _operation,
             decoration:
                 const InputDecoration(
               labelText: 'Operation',
@@ -591,7 +591,7 @@ class _MatrixModeScreenState
           ),
           const SizedBox(height: 12),
           DropdownButtonFormField<int>(
-            value: _size,
+            initialValue: _size,
             decoration:
                 const InputDecoration(
               labelText: 'Matrix size',
@@ -738,7 +738,7 @@ class _MatrixModeScreenState
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: const Color(0xFF7F1D1D)
-            .withOpacity(0.22),
+            .withValues(alpha: 0.22),
         borderRadius:
             BorderRadius.circular(14),
         border: Border.all(

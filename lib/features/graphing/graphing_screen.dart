@@ -634,18 +634,21 @@ class _GraphingScreenState
                 },
               ),
               const SizedBox(height: 10),
-              SwitchListTile(
-                contentPadding:
-                    EdgeInsets.zero,
-                title: const Text(
-                  'Show intercepts, roots & turning points',
+              Material(
+                color: Colors.transparent,
+                child: SwitchListTile(
+                  contentPadding:
+                      EdgeInsets.zero,
+                  title: const Text(
+                    'Show intercepts, roots & turning points',
+                  ),
+                  value: _showKeyPoints,
+                  onChanged: (bool value) {
+                    setState(() {
+                      _showKeyPoints = value;
+                    });
+                  },
                 ),
-                value: _showKeyPoints,
-                onChanged: (bool value) {
-                  setState(() {
-                    _showKeyPoints = value;
-                  });
-                },
               ),
               const SizedBox(height: 6),
               Wrap(
@@ -689,7 +692,7 @@ class _GraphingScreenState
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: const Color(0xFF7F1D1D)
-                  .withOpacity(0.22),
+                  .withValues(alpha: 0.22),
               borderRadius:
                   BorderRadius.circular(12),
               border: Border.all(
@@ -955,7 +958,7 @@ class _GraphingScreenState
                           BoxDecoration(
                         color: AppTheme
                             .display
-                            .withOpacity(
+                            .withValues(alpha: 
                           0.88,
                         ),
                         borderRadius:

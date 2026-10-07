@@ -296,7 +296,7 @@ class _Indicator extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         color: active
-            ? AppTheme.equals.withOpacity(0.18)
+            ? AppTheme.equals.withValues(alpha: 0.18)
             : AppTheme.numberKey,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(

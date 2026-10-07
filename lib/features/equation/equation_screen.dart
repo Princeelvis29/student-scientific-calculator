@@ -512,7 +512,7 @@ class _HeaderCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           DropdownButtonFormField<EquationKind>(
-            value: kind,
+            initialValue: kind,
             isExpanded: true,
             decoration: const InputDecoration(
               labelText: 'Equation type',
@@ -587,7 +587,7 @@ class _ResultCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppTheme.display,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: accent.withOpacity(0.55)),
+        border: Border.all(color: accent.withValues(alpha: 0.55)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -644,9 +644,9 @@ class _MessageCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: color.withOpacity(0.5)),
+        border: Border.all(color: color.withValues(alpha: 0.5)),
       ),
       child: Row(
         children: <Widget>[
